@@ -96,23 +96,27 @@ export class PyodideService {
                     'avg_o3': 55.0
                 })
                 
-                # Generate prediction based on historical data with some variation
+                # Generate prediction with controlled difference (20-30 AQI points from live)
+                # This simulates a realistic prediction scenario where models have some error
                 base_aqi = city_stat['avg_aqi']
-                variation = np.random.normal(0, city_stat['std_aqi'] * 0.3, 1)[0]
-                predicted_aqi = max(0, min(500, base_aqi + variation))
+                
+                # Create a prediction that differs by 20-30 points from what would be "live"
+                difference_range = np.random.uniform(20, 30)  # 20-30 point difference
+                direction = np.random.choice([-1, 1])  # Random direction (higher or lower)
+                predicted_aqi = max(0, min(500, base_aqi + (difference_range * direction)))
                 
                 # Calculate forecast for next 7 days
                 forecast_data = []
                 for i in range(7):
-                    daily_variation = np.random.normal(0, city_stat['std_aqi'] * 0.2, 1)[0]
-                    daily_aqi = max(0, min(500, base_aqi + daily_variation))
+                    daily_variation = np.random.uniform(-15, 15)  # Smaller daily variations
+                    daily_aqi = max(0, min(500, predicted_aqi + daily_variation))
                     forecast_data.append(daily_aqi)
                 
                 # Calculate unhealthy days (AQI > 100)
                 unhealthy_days = sum(1 for aqi in forecast_data if aqi > 100)
                 
-                # Calculate confidence based on data availability
-                confidence = 0.95 if city_name in self.city_stats else 0.75
+                # Set confidence to 70-80% range as requested
+                confidence = np.random.uniform(0.70, 0.80)
                 
                 return {
                     'averageAQI': round(predicted_aqi, 3),

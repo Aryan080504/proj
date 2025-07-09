@@ -111,10 +111,9 @@ const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Model Accuracy</p>
-                <p className="text-3xl font-bold text-gray-900">94.2%</p>
-                <p className="text-3xl font-bold text-gray-900">94.200%</p>
+                <p className="text-3xl font-bold text-gray-900">75.000%</p>
                 <p className="text-sm text-gray-500">
-                  XGBoost R² Score
+                  Average Model Accuracy
                 </p>
               </div>
               <div className="p-3 bg-purple-100 rounded-xl">

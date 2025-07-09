@@ -58,15 +58,15 @@ export class AQIService {
 
     const multiplier = cityMultipliers[city] || 1.0;
     const baseAQI = Math.floor(60 + Math.random() * 40);
-    const aqi = Math.floor(baseAQI * multiplier);
+    const aqi = parseFloat((baseAQI * multiplier).toFixed(3));
 
     return {
       aqi,
       status: this.getAQIStatus(aqi),
-      pm25: Math.floor(aqi * 0.6),
-      pm10: Math.floor(aqi * 0.8),
-      o3: Math.floor(aqi * 0.4),
-      no2: Math.floor(aqi * 0.3),
+      pm25: parseFloat((aqi * 0.6).toFixed(3)),
+      pm10: parseFloat((aqi * 0.8).toFixed(3)),
+      o3: parseFloat((aqi * 0.4).toFixed(3)),
+      no2: parseFloat((aqi * 0.3).toFixed(3)),
       city: city,
       timestamp: new Date(),
       dominantPollutant: 'pm25'
