@@ -21,7 +21,7 @@ export class PyodideService {
       });
 
       // Install required packages
-      await this.pyodide.loadPackage(['numpy', 'pandas', 'scikit-learn']);
+      await this.pyodide.loadPackage(['numpy', 'scipy', 'pandas', 'scikit-learn']);
 
       // Load model simulation code
       await this.pyodide.runPython(`
