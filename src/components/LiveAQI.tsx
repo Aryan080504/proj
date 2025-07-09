@@ -92,7 +92,7 @@ const LiveAQI: React.FC<LiveAQIProps> = ({ city, onDataUpdate }) => {
             <span className="text-sm font-medium text-gray-600">PM2.5</span>
           </div>
           <p className="text-2xl font-bold text-gray-800">
-            {liveData?.pm25 || Math.floor(Math.random() * 100)}
+            {(liveData?.pm25 || Math.floor(Math.random() * 100)).toFixed(3)}
           </p>
           <p className="text-xs text-gray-500">µg/m³</p>
         </div>
@@ -103,7 +103,7 @@ const LiveAQI: React.FC<LiveAQIProps> = ({ city, onDataUpdate }) => {
             <span className="text-sm font-medium text-gray-600">PM10</span>
           </div>
           <p className="text-2xl font-bold text-gray-800">
-            {liveData?.pm10 || Math.floor(Math.random() * 150)}
+            {(liveData?.pm10 || Math.floor(Math.random() * 150)).toFixed(3)}
           </p>
           <p className="text-xs text-gray-500">µg/m³</p>
         </div>
@@ -114,7 +114,7 @@ const LiveAQI: React.FC<LiveAQIProps> = ({ city, onDataUpdate }) => {
             <span className="text-sm font-medium text-gray-600">O3</span>
           </div>
           <p className="text-2xl font-bold text-gray-800">
-            {liveData?.o3 || Math.floor(Math.random() * 80)}
+            {(liveData?.o3 || Math.floor(Math.random() * 80)).toFixed(3)}
           </p>
           <p className="text-xs text-gray-500">µg/m³</p>
         </div>
@@ -125,7 +125,7 @@ const LiveAQI: React.FC<LiveAQIProps> = ({ city, onDataUpdate }) => {
             <span className="text-sm font-medium text-gray-600">NO2</span>
           </div>
           <p className="text-2xl font-bold text-gray-800">
-            {liveData?.no2 || Math.floor(Math.random() * 60)}
+            {(liveData?.no2 || Math.floor(Math.random() * 60)).toFixed(3)}
           </p>
           <p className="text-xs text-gray-500">µg/m³</p>
         </div>

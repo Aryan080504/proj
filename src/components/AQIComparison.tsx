@@ -11,7 +11,7 @@ const AQIComparison: React.FC<AQIComparisonProps> = ({ liveAQI, forecastData, ci
   const liveValue = liveAQI?.aqi || 0;
   const forecastValue = forecastData?.averageAQI || 0;
   const difference = liveValue - forecastValue;
-  const accuracy = Math.max(0, 100 - Math.abs(difference) * 2);
+  const accuracy = parseFloat(Math.max(0, 100 - Math.abs(difference) * 2).toFixed(3));
 
   const getDifferenceColor = (diff: number) => {
     if (Math.abs(diff) <= 10) return 'text-green-600';
@@ -63,7 +63,7 @@ const AQIComparison: React.FC<AQIComparisonProps> = ({ liveAQI, forecastData, ci
               <span className="text-sm font-medium text-gray-600">Difference</span>
             </div>
             <p className={`text-2xl font-bold ${getDifferenceColor(difference)}`}>
-              {difference > 0 ? '+' : ''}{difference.toFixed(1)}
+              {difference > 0 ? '+' : ''}{difference.toFixed(3)}
             </p>
             <p className="text-xs text-gray-500">AQI points</p>
           </div>
@@ -78,7 +78,7 @@ const AQIComparison: React.FC<AQIComparisonProps> = ({ liveAQI, forecastData, ci
               <span className="text-sm font-medium text-gray-600">Accuracy</span>
             </div>
             <p className={`text-2xl font-bold ${getAccuracyColor(accuracy)}`}>
-              {accuracy.toFixed(1)}%
+              {accuracy.toFixed(3)}%
             </p>
             <p className="text-xs text-gray-500">Prediction accuracy</p>
           </div>

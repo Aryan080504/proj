@@ -78,7 +78,7 @@ const Dashboard: React.FC = () => {
               <div>
                 <p className="text-sm font-medium text-gray-600">Current AQI</p>
                 <p className="text-3xl font-bold text-gray-900">
-                  {liveAQI?.aqi || '--'}
+                  {liveAQI?.aqi ? liveAQI.aqi.toFixed(3) : '--'}
                 </p>
                 <p className="text-sm text-gray-500">
                   {liveAQI?.status || 'Loading...'}
@@ -95,7 +95,7 @@ const Dashboard: React.FC = () => {
               <div>
                 <p className="text-sm font-medium text-gray-600">Forecast AQI</p>
                 <p className="text-3xl font-bold text-gray-900">
-                  {forecastData?.averageAQI || '--'}
+                  {forecastData?.averageAQI ? forecastData.averageAQI.toFixed(3) : '--'}
                 </p>
                 <p className="text-sm text-gray-500">
                   Next 7 days avg
@@ -112,6 +112,7 @@ const Dashboard: React.FC = () => {
               <div>
                 <p className="text-sm font-medium text-gray-600">Model Accuracy</p>
                 <p className="text-3xl font-bold text-gray-900">94.2%</p>
+                <p className="text-3xl font-bold text-gray-900">94.200%</p>
                 <p className="text-sm text-gray-500">
                   XGBoost R² Score
                 </p>

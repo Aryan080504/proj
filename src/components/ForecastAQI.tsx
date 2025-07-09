@@ -40,7 +40,7 @@ const ForecastAQI: React.FC<ForecastAQIProps> = ({ city, onForecastUpdate }) => 
         const forecast = {
           labels,
           data,
-          averageAQI: Math.round(data.reduce((a, b) => a + b, 0) / data.length),
+          averageAQI: parseFloat((data.reduce((a, b) => a + b, 0) / data.length).toFixed(3)),
           unhealthyDays: data.filter(aqi => aqi > 100).length
         };
         

@@ -178,19 +178,19 @@ const HistoricalAQI: React.FC<HistoricalAQIProps> = ({ city }) => {
         <div className="text-center p-3 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-600">Average</p>
           <p className="text-lg font-semibold text-gray-800">
-            {historicalData?.data.reduce((a: number, b: number) => a + b, 0) / historicalData?.data.length || 0}
+            {(historicalData?.data.reduce((a: number, b: number) => a + b, 0) / historicalData?.data.length || 0).toFixed(3)}
           </p>
         </div>
         <div className="text-center p-3 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-600">Best Day</p>
           <p className="text-lg font-semibold text-green-600">
-            {Math.min(...(historicalData?.data || [0]))}
+            {Math.min(...(historicalData?.data || [0])).toFixed(3)}
           </p>
         </div>
         <div className="text-center p-3 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-600">Worst Day</p>
           <p className="text-lg font-semibold text-red-600">
-            {Math.max(...(historicalData?.data || [0]))}
+            {Math.max(...(historicalData?.data || [0])).toFixed(3)}
           </p>
         </div>
       </div>
