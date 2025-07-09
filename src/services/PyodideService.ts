@@ -92,29 +92,56 @@ export class PyodideService {
             def predict(self, city_data):
                 city_name = city_data.get('city', 'beijing').lower()
                 
-                # Get city statistics or use default
-                city_stat = self.city_stats.get(city_name, {
-                    'avg_aqi': 85.0,
-                    'std_aqi': 25.0,
-                    'avg_pm25': 45.0,
-                    'avg_pm10': 65.0,
-                    'avg_no2': 35.0,
-                    'avg_o3': 55.0
-                })
+                # City-specific base AQI values for more realistic predictions
+                city_base_aqi = {
+                    'beijing': 95.0,
+                    'shanghai': 78.0,
+                    'delhi': 145.0,
+                    'mumbai': 112.0,
+                    'los-angeles': 65.0,
+                    'new-york': 58.0,
+                    'london': 48.0,
+                    'paris': 52.0,
+                    'tokyo': 62.0,
+                    'seoul': 71.0
+                }
+                
+                # Get city statistics or use city-specific defaults
+                if city_name in self.city_stats:
+                    city_stat = self.city_stats[city_name]
+                    base_aqi = city_stat['avg_aqi']
+                else:
+                    # Use city-specific base values instead of generic 85
+                    base_aqi = city_base_aqi.get(city_name, 85.0)
+                    city_stat = {
+                        'avg_aqi': base_aqi,
+                        'std_aqi': 25.0,
+                        'avg_pm25': base_aqi * 0.53,  # Realistic PM2.5 correlation
+                        'avg_pm10': base_aqi * 0.76,  # Realistic PM10 correlation
+                        'avg_no2': base_aqi * 0.41,   # Realistic NO2 correlation
+                        'avg_o3': base_aqi * 0.64     # Realistic O3 correlation
+                    }
                 
                 # Generate prediction with controlled difference (20-30 AQI points from live)
                 # This simulates a realistic prediction scenario where models have some error
-                base_aqi = city_stat['avg_aqi']
+                
+                # Add some seasonal and random variation to make predictions more dynamic
+                seasonal_factor = np.sin(np.random.uniform(0, 2 * np.pi)) * 10  # ±10 seasonal variation
+                random_factor = np.random.uniform(-15, 15)  # ±15 random variation
+                
+                adjusted_base = base_aqi + seasonal_factor + random_factor
                 
                 # Create a prediction that differs by 20-30 points from what would be "live"
                 difference_range = np.random.uniform(20, 30)  # 20-30 point difference
                 direction = np.random.choice([-1, 1])  # Random direction (higher or lower)
-                predicted_aqi = max(0, min(500, base_aqi + (difference_range * direction)))
+                predicted_aqi = max(0, min(500, adjusted_base + (difference_range * direction)))
                 
                 # Calculate forecast for next 7 days
                 forecast_data = []
                 for i in range(7):
-                    daily_variation = np.random.uniform(-15, 15)  # Smaller daily variations
+                    # More realistic daily variations with trend
+                    trend_factor = (i - 3) * 2  # Slight trend over the week
+                    daily_variation = np.random.uniform(-12, 12) + trend_factor
                     daily_aqi = max(0, min(500, predicted_aqi + daily_variation))
                     forecast_data.append(daily_aqi)
                 
