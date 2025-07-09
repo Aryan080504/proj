@@ -20,7 +20,7 @@ export class PyodideService {
         indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/'
       });
 
-      // Install required packages
+      // Install required packages (only numpy)
       await this.pyodide.loadPackage(['numpy']);
 
       // Load model simulation code
