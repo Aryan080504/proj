@@ -35,6 +35,8 @@ export class PyodideService {
         # Load the CSV data
         async def load_csv_data():
             response = await fetch('/city_day.csv')
+            if not response.ok:
+                raise Exception(f"Failed to fetch CSV data: {response.status} {response.statusText}")
             csv_text = await response.text()
             return pd.read_csv(io.StringIO(csv_text))
         
@@ -42,12 +44,16 @@ export class PyodideService {
         async def load_model_files():
             # Load model
             model_response = await fetch('/aqi_model_2025.joblib')
+            if not model_response.ok:
+                raise Exception(f"Failed to fetch model file: {model_response.status} {model_response.statusText}")
             model_bytes = await model_response.arrayBuffer()
             model_file = io.BytesIO(model_bytes.to_py())
             model = joblib.load(model_file)
             
             # Load imputer
             imputer_response = await fetch('/aqi_imputer_2025.joblib')
+            if not imputer_response.ok:
+                raise Exception(f"Failed to fetch imputer file: {imputer_response.status} {imputer_response.statusText}")
             imputer_bytes = await imputer_response.arrayBuffer()
             imputer_file = io.BytesIO(imputer_bytes.to_py())
             imputer = joblib.load(imputer_file)
