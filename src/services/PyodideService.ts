@@ -21,7 +21,7 @@ export class PyodideService {
       });
 
       // Install required packages
-      await this.pyodide.loadPackage(['numpy', 'pandas', 'scikit-learn', 'joblib']);
+      await this.pyodide.loadPackage(['numpy', 'pandas', 'scikit-learn', 'joblib', 'xgboost']);
 
       // Load the actual model and data
       await this.pyodide.runPython(`
