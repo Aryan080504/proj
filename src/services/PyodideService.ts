@@ -21,31 +21,17 @@ export class PyodideService {
       });
 
       // Install required packages
-      await this.pyodide.loadPackage(['numpy', 'scipy', 'pandas', 'scikit-learn']);
+      await this.pyodide.loadPackage(['numpy']);
 
       // Load model simulation code
       await this.pyodide.runPython(`
         import numpy as np
-        import pandas as pd
-        from sklearn.ensemble import RandomForestRegressor
-        from sklearn.impute import SimpleImputer
         import json
         
         # Simulate pre-trained model
         class MockAQIModel:
             def __init__(self):
-                self.model = RandomForestRegressor(n_estimators=100, random_state=42)
-                self.imputer = SimpleImputer(strategy='mean')
-                self._train_mock_model()
-            
-            def _train_mock_model(self):
-                # Create mock training data
-                X = np.random.rand(1000, 5)  # 5 features: PM2.5, PM10, O3, NO2, weather
-                y = 50 + X[:, 0] * 80 + X[:, 1] * 40 + np.random.normal(0, 10, 1000)
-                y = np.clip(y, 0, 300)
-                
-                self.model.fit(X, y)
-                self.imputer.fit(X)
+                pass
             
             def predict(self, city_data):
                 # Simulate city-specific predictions
@@ -63,7 +49,7 @@ export class PyodideService {
                 }
                 
                 multiplier = city_multipliers.get(city_data.get('city', 'beijing'), 1.0)
-                base_prediction = 60 + np.random.normal(0, 15)
+                base_prediction = 60 + np.random.normal(0, 15, 1)[0]
                 
                 return {
                     'averageAQI': int(base_prediction * multiplier),
