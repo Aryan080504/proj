@@ -8,7 +8,7 @@ import CitySelector from './CitySelector';
 import { AQIService } from '../services/AQIService';
 
 const Dashboard: React.FC = () => {
-  const [selectedCity, setSelectedCity] = useState('beijing');
+  const [selectedCity, setSelectedCity] = useState('delhi');
   const [liveAQI, setLiveAQI] = useState<any>(null);
   const [forecastData, setForecastData] = useState<any>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);

@@ -43,20 +43,46 @@ export class AQIService {
   }
 
   private static getMockAQI(city: string) {
-    const cityMultipliers: { [key: string]: number } = {
-      'beijing': 1.3,
-      'delhi': 1.5,
-      'mumbai': 1.2,
-      'shanghai': 1.1,
-      'los-angeles': 0.8,
-      'new-york': 0.9,
-      'london': 0.7,
-      'paris': 0.8,
-      'tokyo': 0.9,
-      'seoul': 1.0
+    const stateMultipliers: { [key: string]: number } = {
+      'delhi': 1.8,
+      'uttar-pradesh': 1.6,
+      'bihar': 1.7,
+      'haryana': 1.5,
+      'punjab': 1.4,
+      'rajasthan': 1.3,
+      'madhya-pradesh': 1.2,
+      'maharashtra': 1.1,
+      'gujarat': 1.0,
+      'west-bengal': 1.3,
+      'jharkhand': 1.4,
+      'chhattisgarh': 1.2,
+      'odisha': 1.1,
+      'andhra-pradesh': 1.0,
+      'telangana': 1.1,
+      'karnataka': 0.9,
+      'tamil-nadu': 1.0,
+      'kerala': 0.8,
+      'goa': 0.7,
+      'assam': 1.0,
+      'arunachal-pradesh': 0.6,
+      'nagaland': 0.7,
+      'manipur': 0.8,
+      'mizoram': 0.7,
+      'tripura': 0.9,
+      'meghalaya': 0.8,
+      'sikkim': 0.6,
+      'himachal-pradesh': 0.7,
+      'uttarakhand': 0.8,
+      'jammu-kashmir': 0.9,
+      'ladakh': 0.5,
+      'chandigarh': 1.2,
+      'puducherry': 0.9,
+      'andaman-nicobar': 0.5,
+      'lakshadweep': 0.4,
+      'dadra-nagar-haveli': 0.8
     };
 
-    const multiplier = cityMultipliers[city] || 1.0;
+    const multiplier = stateMultipliers[city] || 1.0;
     const baseAQI = Math.floor(60 + Math.random() * 40);
     const aqi = parseFloat((baseAQI * multiplier).toFixed(3));
 

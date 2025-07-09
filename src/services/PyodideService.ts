@@ -92,30 +92,24 @@ export class PyodideService {
             def predict(self, city_data):
                 city_name = city_data.get('city', 'beijing').lower()
                 
-                # Get city statistics or use default
+                # Generate random forecast between 80-100 for any Indian state
+                predicted_aqi = np.random.uniform(80, 100)
+                
+                # Get city statistics or use default for other calculations
                 city_stat = self.city_stats.get(city_name, {
-                    'avg_aqi': 85.0,
-                    'std_aqi': 25.0,
-                    'avg_pm25': 45.0,
-                    'avg_pm10': 65.0,
-                    'avg_no2': 35.0,
-                    'avg_o3': 55.0
+                    'avg_aqi': predicted_aqi,
+                    'std_aqi': 15.0,
+                    'avg_pm25': predicted_aqi * 0.5,
+                    'avg_pm10': predicted_aqi * 0.7,
+                    'avg_no2': predicted_aqi * 0.3,
+                    'avg_o3': predicted_aqi * 0.4
                 })
-                
-                # Generate prediction with controlled difference (20-30 AQI points from live)
-                # This simulates a realistic prediction scenario where models have some error
-                base_aqi = city_stat['avg_aqi']
-                
-                # Create a prediction that differs by 20-30 points from what would be "live"
-                difference_range = np.random.uniform(20, 30)  # 20-30 point difference
-                direction = np.random.choice([-1, 1])  # Random direction (higher or lower)
-                predicted_aqi = max(0, min(500, base_aqi + (difference_range * direction)))
                 
                 # Calculate forecast for next 7 days
                 forecast_data = []
                 for i in range(7):
-                    daily_variation = np.random.uniform(-15, 15)  # Smaller daily variations
-                    daily_aqi = max(0, min(500, predicted_aqi + daily_variation))
+                    # Each day gets a new random value between 80-100
+                    daily_aqi = np.random.uniform(80, 100)
                     forecast_data.append(daily_aqi)
                 
                 # Calculate unhealthy days (AQI > 100)
@@ -134,7 +128,7 @@ export class PyodideService {
                         'avgPM10': round(city_stat['avg_pm10'], 3),
                         'avgNO2': round(city_stat['avg_no2'], 3),
                         'avgO3': round(city_stat['avg_o3'], 3),
-                        'historicalAvg': round(city_stat['avg_aqi'], 3),
+                        'historicalAvg': round(predicted_aqi, 3),
                         'stdDev': round(city_stat['std_aqi'], 3)
                     }
                 }
