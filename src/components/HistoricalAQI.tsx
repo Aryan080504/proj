@@ -11,8 +11,8 @@ import {
   Legend,
   Filler
 } from 'chart.js';
-import { format, subDays } from 'date-fns';
 import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
+import { CSVService } from '../services/CSVService';
 
 ChartJS.register(
   CategoryScale,
@@ -34,30 +34,19 @@ const HistoricalAQI: React.FC<HistoricalAQIProps> = ({ city }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const generateHistoricalData = () => {
-      const days = 30;
-      const data = [];
-      const labels = [];
-      
-      for (let i = days; i >= 0; i--) {
-        const date = subDays(new Date(), i);
-        labels.push(format(date, 'MMM dd'));
-        
-        // Generate realistic AQI data with some variation
-        const baseAQI = city === 'beijing' ? 85 : city === 'delhi' ? 120 : 65;
-        const variation = Math.random() * 40 - 20;
-        data.push(Math.max(0, Math.min(300, baseAQI + variation)));
+    const loadHistoricalData = async () => {
+      setLoading(true);
+      try {
+        const data = await CSVService.loadHistoricalAQI(city);
+        setHistoricalData(data);
+      } catch (error) {
+        console.error('Error loading historical data:', error);
+      } finally {
+        setLoading(false);
       }
-      
-      return { labels, data };
     };
 
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setHistoricalData(generateHistoricalData());
-      setLoading(false);
-    }, 1000);
+    loadHistoricalData();
   }, [city]);
 
   const getAQIColor = (aqi: number) => {
@@ -112,7 +101,7 @@ const HistoricalAQI: React.FC<HistoricalAQIProps> = ({ city }) => {
             else if (aqi <= 300) status = 'Very Unhealthy';
             else status = 'Hazardous';
             
-            return `AQI: ${aqi} (${status})`;
+            return `AQI: ${aqi.toFixed(3)} (${status})`;
           }
         }
       }
@@ -142,7 +131,10 @@ const HistoricalAQI: React.FC<HistoricalAQIProps> = ({ city }) => {
   if (loading) {
     return (
       <div className="h-64 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+          <p className="text-sm text-gray-600">Loading historical data...</p>
+        </div>
       </div>
     );
   }
@@ -165,7 +157,7 @@ const HistoricalAQI: React.FC<HistoricalAQIProps> = ({ city }) => {
             <TrendingDown className="w-4 h-4 text-green-500" />
           )}
           <span className={`text-sm font-medium ${trend > 0 ? 'text-red-500' : 'text-green-500'}`}>
-            {Math.abs(trend).toFixed(1)} AQI
+            {Math.abs(trend).toFixed(3)} AQI
           </span>
         </div>
       </div>

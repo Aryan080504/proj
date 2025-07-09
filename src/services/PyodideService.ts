@@ -1,10 +1,16 @@
+import { CSVService } from './CSVService';
+
 export class PyodideService {
   private static isInitialized = false;
+  private static forecastedData: { [key: string]: number } = {};
 
   static async initialize() {
     if (this.isInitialized) return;
 
     try {
+      // Load forecasted data from CSV
+      this.forecastedData = await CSVService.loadForecastedAQI();
+      
       // Simulate initialization delay
       await new Promise(resolve => setTimeout(resolve, 2000));
       this.isInitialized = true;
@@ -20,32 +26,36 @@ export class PyodideService {
     }
 
     try {
-      // Generate random forecast between 80-100 as requested
-      const predictedAQI = parseFloat((80 + Math.random() * 20).toFixed(3));
+      // Get forecasted AQI from CSV data
+      const forecastedAQI = this.forecastedData[city.toLowerCase()] || 85.000;
       
-      // Generate forecast for next 7 days (all random between 80-100)
+      // Generate forecast for next 7 days based on the CSV value with some variation
       const forecast = [];
       for (let i = 0; i < 7; i++) {
-        forecast.push(parseFloat((80 + Math.random() * 20).toFixed(3)));
+        const variation = (Math.random() - 0.5) * 10; // ±5 AQI variation
+        forecast.push(parseFloat((forecastedAQI + variation).toFixed(3)));
       }
       
-      // Calculate unhealthy days (AQI > 100, should be 0 since we're generating 80-100)
+      // Calculate average from forecast
+      const averageAQI = parseFloat((forecast.reduce((a, b) => a + b, 0) / forecast.length).toFixed(3));
+      
+      // Calculate unhealthy days (AQI > 100)
       const unhealthyDays = forecast.filter(aqi => aqi > 100).length;
       
       // Random confidence between 70-80%
       const confidence = parseFloat((0.70 + Math.random() * 0.10).toFixed(3));
       
       return {
-        averageAQI: predictedAQI,
+        averageAQI: averageAQI,
         confidence: confidence,
         unhealthyDays: unhealthyDays,
         forecast: forecast,
         cityStats: {
-          avgPM25: parseFloat((predictedAQI * 0.5).toFixed(3)),
-          avgPM10: parseFloat((predictedAQI * 0.7).toFixed(3)),
-          avgNO2: parseFloat((predictedAQI * 0.3).toFixed(3)),
-          avgO3: parseFloat((predictedAQI * 0.4).toFixed(3)),
-          historicalAvg: predictedAQI,
+          avgPM25: parseFloat((averageAQI * 0.5).toFixed(3)),
+          avgPM10: parseFloat((averageAQI * 0.7).toFixed(3)),
+          avgNO2: parseFloat((averageAQI * 0.3).toFixed(3)),
+          avgO3: parseFloat((averageAQI * 0.4).toFixed(3)),
+          historicalAvg: forecastedAQI,
           stdDev: parseFloat((15 + Math.random() * 10).toFixed(3))
         }
       };
